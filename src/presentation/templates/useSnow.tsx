@@ -16,7 +16,7 @@ const useSnow = (
 
     function drawSnowflake(flake: any) {
       ctx.font = `${flake.size}px Arial`;
-      ctx.fillText("🎉", flake.x, flake.y);
+      ctx.fillText(flake.text, flake.x, flake.y);
     }
 
     ctx.clearRect(0, 0, canvas!.width, canvas!.height);
@@ -36,6 +36,7 @@ const useSnow = (
     canvas.height = window.innerHeight;
 
     function createSnowflake() {
+      const randomValue = Math.floor(Math.random() * 2);
       return {
         x: Math.random() * canvas!.width,
         y: 0,
@@ -43,6 +44,7 @@ const useSnow = (
         radius: Math.random() * 3 + 1,
         speed: Math.random() * 2 + 1,
         opacity: Math.random(),
+        text: !randomValue ? "🎉" : "🎁",
       };
     }
 

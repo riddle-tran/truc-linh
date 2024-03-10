@@ -65,7 +65,7 @@ export default function SignIn() {
   React.useEffect(() => {
     if (authState.initialized && !particleNetworkRef.current) {
       const canvas = canvasRef.current;
-      const parent= canvasParentRef.current
+      const parent = canvasParentRef.current;
       if (!canvas || !parent) return;
 
       const options = {
@@ -100,7 +100,12 @@ export default function SignIn() {
 
   return (
     <main>
-      <Box width="100vw" height="100vh" ref={canvasParentRef} position='relative'>
+      <Box
+        width="100vw"
+        height="100vh"
+        ref={canvasParentRef}
+        position="relative"
+      >
         <canvas ref={canvasRef} />
       </Box>
 
@@ -153,6 +158,10 @@ export default function SignIn() {
           </Flex>
         </Box>
       )}
+      <video width="640" height="360" style={{ display: "none" }} preload='auto'>
+        <source src="/truc-linh/happy-birthday.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
     </main>
   );
 }

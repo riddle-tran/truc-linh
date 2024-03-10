@@ -23,6 +23,7 @@ const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
   const canvasParentRef = React.useRef<HTMLDivElement | null>(null);
   const particleNetworkRef = React.useRef<ParticleNetwork>();
   const textContentWrapper = React.useRef<HTMLDivElement>(null);
+
   const { runSnow } = useSnow(canvasRef, particleNetworkRef);
 
   React.useEffect(() => {
@@ -45,19 +46,41 @@ const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
           options
         );
         runSnow();
+        const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
+        const video = document.createElement("video");
+        video.src = "/truc-linh/happy-birthday.mp4"; // Replace with the actual path to your video file
+        video.autoplay = true;
+        video.preload = "auto";
+        video.loop = true;
+
+        video.addEventListener("canplay", () => {
+          video.play();
+        });
+
+        video.addEventListener("ended", () => {
+          video.currentTime = 0;
+          video.play();
+        });
+
+
+        const drawFrame = () => {
+          ctx.drawImage(video, canvas.width / 2, 190, 640, 360);
+          requestAnimationFrame(drawFrame);
+        };
+
+        video.addEventListener("play", drawFrame);
       }
     }, 0);
   }, [active, runSnow]);
 
   React.useEffect(() => {
-      if(!textContentWrapper.current){
-        return
-      }
-      const pElements = textContentWrapper.current.querySelectorAll('p');
-      pElements.forEach((pElement, index) => {
-        pElement.textContent =textContent.current[index + 1];
-      });
-      
+    if (!textContentWrapper.current) {
+      return;
+    }
+    const pElements = textContentWrapper.current.querySelectorAll("p");
+    pElements.forEach((pElement, index) => {
+      pElement.textContent = textContent.current[index + 1];
+    });
   }, []);
 
   return (
@@ -72,7 +95,7 @@ const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
       </Box>
       <Box
         position="absolute"
-        top="calc(30%)"
+        top="250px"
         left="calc(10%)"
         zIndex={21}
         fontFamily="cursive"
