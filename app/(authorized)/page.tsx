@@ -3,13 +3,23 @@ import * as React from "react";
 
 import { AuthContext } from "@/src/context/AuthContext";
 import LoadingPage from "@/src/presentation/templates/LoadingPage";
-import { ParticleNetwork } from "@/src/presentation/templates/ParticleNetwork";
-import { Box } from "@chakra-ui/react";
+import {
+  Box,
+  Image,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import { redirect } from "next/navigation";
+import HappyBirthday from "@/src/presentation/templates/HappyBirthday";
+import Memories from "@/src/presentation/templates/Memories";
 
 export default function Home() {
   const [loading, setLoading] = React.useState<boolean>(true);
   const { authState, authDispatch } = React.useContext(AuthContext);
+  const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
   React.useEffect(() => {
     authDispatch({ type: "initialize" });
@@ -25,36 +35,31 @@ export default function Home() {
     setLoading(false);
   }, [authState.initialized, authState.isLogin]);
 
-  React.useEffect(() => {
-    if (!loading) {
-      setTimeout(() => {
-        const canvas = document.getElementById(
-          "homeCanvasId"
-        ) as HTMLDivElement;
-        const options = {
-          particleColor: "#FFFFFF",
-          background: "#FFB6C1",
-          interactive: true,
-          velocity: 0.66, // Adjust as needed
-          density: 10000, // Adjust as needed
-        };
-
-        new ParticleNetwork(canvas, options);
-      }, 0);
-    }
-  }, [loading]);
-
-  if (!authState.initialized || loading) {
-    return <LoadingPage />;
-  }
-
   if (!authState.initialized || loading) {
     return <LoadingPage />;
   }
 
   return (
     <main>
-      <Box id="homeCanvasId" width="100vw" height="100vh"></Box>
+      <Box width="100vw" height="100vh" position="relative">
+        <Tabs
+          defaultIndex={activeIndex}
+          onChange={(index) => setActiveIndex(index)}
+        >
+          <TabList display="flex" alignItems="center" justifyContent="center">
+            <Tab>Happy birthday 🎉🎉🎉</Tab>
+            <Tab>Memories 🥰🥰🥰</Tab>
+          </TabList>
+          <TabPanels minH="calc(100vh - 52px)">
+            <TabPanel>
+              <HappyBirthday  active={activeIndex===0}/>
+            </TabPanel>
+            <TabPanel>
+              <Memories active={activeIndex===1}/>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Box>
     </main>
   );
 }

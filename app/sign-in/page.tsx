@@ -12,10 +12,12 @@ import LoadingPage from "@/src/presentation/templates/LoadingPage";
 
 export default function SignIn() {
   const pinInputRef = React.useRef<HTMLInputElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const canvasParentRef = React.useRef<HTMLDivElement | null>(null);
+  const particleNetworkRef = React.useRef<ParticleNetwork>();
   const { authState, authDispatch } = React.useContext(AuthContext);
   const [pin, setPin] = React.useState("");
   const [isComing, setIsComing] = React.useState(true);
-  const particleNetworkRef = React.useRef<ParticleNetwork>();
   const toast = useToast();
   const targetDate = "2024-03-20 23:59:59:999";
 
@@ -62,9 +64,10 @@ export default function SignIn() {
 
   React.useEffect(() => {
     if (authState.initialized && !particleNetworkRef.current) {
-      const canvas = document.getElementById(
-        "signInCanvasId"
-      ) as HTMLDivElement;
+      const canvas = canvasRef.current;
+      const parent= canvasParentRef.current
+      if (!canvas || !parent) return;
+
       const options = {
         particleColor: "#FFFFFF",
         background: "#FFB6C1",
@@ -73,7 +76,7 @@ export default function SignIn() {
         density: 10000, // Adjust as needed
       };
 
-      particleNetworkRef.current = new ParticleNetwork(canvas, options);
+      particleNetworkRef.current = new ParticleNetwork(parent, canvas, options);
     }
   }, [authState.initialized]);
 
@@ -97,7 +100,9 @@ export default function SignIn() {
 
   return (
     <main>
-      <Box id="signInCanvasId" width="100vw" height="100vh"></Box>
+      <Box width="100vw" height="100vh" ref={canvasParentRef} position='relative'>
+        <canvas ref={canvasRef} />
+      </Box>
 
       {isComing ? (
         <Box

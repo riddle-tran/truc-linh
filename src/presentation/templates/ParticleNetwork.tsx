@@ -44,8 +44,7 @@ export class Particle {
 }
 
 export class ParticleNetwork {
-  canvasDiv: any;
-  bgDiv!: HTMLDivElement;
+  parent: HTMLDivElement;
   canvas!: HTMLCanvasElement;
   ctx!: CanvasRenderingContext2D;
   options: {
@@ -58,12 +57,15 @@ export class ParticleNetwork {
   particles!: Particle[];
   mouseParticle!: Particle;
   resetTimer: any;
+  size: any
 
-  constructor(canvas: HTMLDivElement, options: any) {
-    this.canvasDiv = canvas;
-    this.canvasDiv.size = {
-      width: this.canvasDiv.offsetWidth,
-      height: this.canvasDiv.offsetHeight,
+  constructor(parent: HTMLDivElement, canvas: HTMLCanvasElement, options: any) {
+    this.canvas = canvas;
+    this.parent = parent;
+
+    this.size = {
+      width: this.parent.offsetWidth,
+      height: this.parent.offsetHeight,
     };
 
     options = options !== undefined ? options : {};
@@ -82,46 +84,9 @@ export class ParticleNetwork {
   }
 
   init() {
-    this.bgDiv = document.createElement("div");
-    this.canvasDiv.appendChild(this.bgDiv);
-    this.setStyles(this.bgDiv, {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      "z-index": 1,
-    });
-
-    if (/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(this.options.background)) {
-      this.setStyles(this.bgDiv, {
-        background: this.options.background,
-      });
-    } else if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(this.options.background)) {
-      this.setStyles(this.bgDiv, {
-        background: 'url("' + this.options.background + '") no-repeat center',
-        "background-size": "cover",
-      });
-    } else {
-      console.error(
-        "Please specify a valid background image or hexadecimal color"
-      );
-      return false;
-    }
-
-    if (
-      !/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(this.options.particleColor)
-    ) {
-      console.error("Please specify a valid particleColor hexadecimal color");
-      return false;
-    }
-
-    this.canvas = document.createElement("canvas");
-    this.canvasDiv.appendChild(this.canvas);
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-    this.canvas.width = this.canvasDiv.size.width;
-    this.canvas.height = this.canvasDiv.size.height;
-    this.setStyles(this.canvasDiv, { position: "relative" });
+    this.canvas.width = this.size.width;
+    this.canvas.height = this.size.height;
     this.setStyles(this.canvas, {
       "z-index": "20",
       position: "relative",
@@ -129,16 +94,16 @@ export class ParticleNetwork {
 
     window.addEventListener("resize", () => {
       if (
-        this.canvasDiv.offsetWidth === this.canvasDiv.size.width &&
-        this.canvasDiv.offsetHeight === this.canvasDiv.size.height
+        this.parent.offsetWidth === this.size.width &&
+        this.parent.offsetHeight === this.size.height
       ) {
         return false;
       }
 
-      this.canvas.width = this.canvasDiv.size.width =
-        this.canvasDiv.offsetWidth;
-      this.canvas.height = this.canvasDiv.size.height =
-        this.canvasDiv.offsetHeight;
+      this.canvas.width = this.size.width =
+        this.parent.offsetWidth;
+      this.canvas.height = this.size.height =
+        this.parent.offsetHeight;
 
       clearTimeout(this.resetTimer);
       this.resetTimer = setTimeout(() => {
@@ -228,6 +193,33 @@ export class ParticleNetwork {
 
     if (this.options.velocity !== 0) {
       requestAnimationFrame(this.update.bind(this));
+    }
+  }
+
+  draw(){
+    for (let i = 0; i < this.particles.length; i++) {
+      this.particles[i].update();
+      this.particles[i].draw();
+
+      // Draw connections
+      for (let j = this.particles.length - 1; j > i; j--) {
+        const distance = Math.sqrt(
+          Math.pow(this.particles[i].x - this.particles[j].x, 2) +
+            Math.pow(this.particles[i].y - this.particles[j].y, 2)
+        );
+
+        if (distance > 120) {
+          continue;
+        }
+
+        this.ctx.beginPath();
+        this.ctx.strokeStyle = this.options.particleColor;
+        this.ctx.globalAlpha = (120 - distance) / 120;
+        this.ctx.lineWidth = 0.7;
+        this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
+        this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
+        this.ctx.stroke();
+      }
     }
   }
   setVelocity(speed: string) {

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from "react";
 
 export interface AuthState {
@@ -6,6 +6,7 @@ export interface AuthState {
   name: string | undefined;
   nickName: string | undefined;
   initialized: Boolean;
+  isPlay: Boolean;
 }
 
 export type AuthAction =
@@ -24,6 +25,7 @@ export const AuthInitialState: AuthState = {
   nickName: undefined,
   initialized: false,
   isLogin: false,
+  isPlay: false
 };
 
 export const authReducer =
@@ -39,6 +41,7 @@ export const authReducer =
         const state: AuthState = {
           ...prevState,
           ...payload,
+          isPlay:true,
           isLogin: true,
           initialized: true,
         };
@@ -74,6 +77,8 @@ export const AuthContext = React.createContext(authContext);
 export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({
   children,
 }) => {
+  const audioRef = React.useRef<HTMLAudioElement>(null);
+
   const [authState, authDispatch] = React.useReducer(
     authReducer(),
     AuthInitialState
@@ -87,9 +92,16 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({
     [authState]
   );
 
+  React.useEffect(() => {
+    authState.isPlay && audioRef.current?.play()
+  },[authState]);
+
   return (
     <AuthContext.Provider value={authContextValue}>
       {children}
+      <audio ref={audioRef} autoPlay loop>
+        <source src="/truc-linh/happy-birthday.ogg" type="audio/ogg" />
+      </audio>
     </AuthContext.Provider>
   );
 };
