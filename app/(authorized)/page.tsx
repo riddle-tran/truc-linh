@@ -47,7 +47,7 @@ export default function Home() {
           onChange={(index) => setActiveIndex(index)}
         >
           <TabList display="flex" alignItems="center" justifyContent="center">
-            <Tab>Happy birthday 🎉🎉🎉</Tab>
+            <Tab>Happy birthday to Trúc Linh 🎉🎉🎉</Tab>
             <Tab>Memories 🥰🥰🥰</Tab>
           </TabList>
           <TabPanels minH="calc(100vh - 52px)">

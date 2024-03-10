@@ -102,7 +102,7 @@ export function useImage(
               y: -height,
               width,
               height,
-              speed:  Math.random() * 3 + 1,
+              speed:  Math.random() * 1 + 1,
               index,
               key: flake.key,
               status: true,
@@ -142,7 +142,7 @@ export function useImage(
       const src = flakes.current[i][0];
       if (src) {
         const x = delta / 2 + i * (200 + delta);
-        const speed = Math.random() * 3 + 1;
+        const speed = Math.random() * 1 + 1;
         loadImage(src, x, speed, i, 0, true);
       }
     }

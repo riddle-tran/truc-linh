@@ -29,7 +29,6 @@ const Memories: React.FC<{ active: Boolean }> = ({ active }) => {
   }, []);
 
   React.useEffect(() => {
-
     if (!particleNetworkRef.current) {
       const canvas = canvasRef.current;
       const parent = canvasParentRef.current;

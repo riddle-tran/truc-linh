@@ -15,10 +15,8 @@ const useSnow = (
     const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
     function drawSnowflake(flake: any) {
-      ctx.beginPath();
-      ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255, 255, 255, ${flake.opacity})`;
-      ctx.fill();
+      ctx.font = `${flake.size}px Arial`;
+      ctx.fillText("🎉", flake.x, flake.y);
     }
 
     ctx.clearRect(0, 0, canvas!.width, canvas!.height);
@@ -41,8 +39,9 @@ const useSnow = (
       return {
         x: Math.random() * canvas!.width,
         y: 0,
+        size: 14,
         radius: Math.random() * 3 + 1,
-        speed: Math.random() * 3 + 1,
+        speed: Math.random() * 2 + 1,
         opacity: Math.random(),
       };
     }
@@ -53,14 +52,16 @@ const useSnow = (
 
         flake.y += flake.speed;
 
-        if (flake.y > canvas!.height && flakes.current.length < 350) {
+        if (flake.y > canvas!.height) {
           flakes.current[i] = createSnowflake();
         }
       }
     }
 
     function snowfall() {
-      flakes.current.push(createSnowflake());
+      if (flakes.current.length < 30) {
+        flakes.current.push(createSnowflake());
+      }
       updateSnowflakes();
       draw();
       requestAnimationFrame(snowfall);
