@@ -64,7 +64,7 @@ const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
 
 
         const drawFrame = () => {
-          ctx.drawImage(video, canvas.width / 2, 190, 640, 360);
+          ctx.drawImage(video, canvas.width / 2 + 30, 190, 640, 360);
           requestAnimationFrame(drawFrame);
         };
 
@@ -79,7 +79,7 @@ const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
     }
     const pElements = textContentWrapper.current.querySelectorAll("p");
     pElements.forEach((pElement, index) => {
-      pElement.textContent = textContent.current[index + 1];
+      pElement.textContent = textContent.current[index];
     });
   }, []);
 
@@ -96,7 +96,7 @@ const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
       <Box
         position="absolute"
         top="250px"
-        left="calc(10%)"
+        left="calc(8%)"
         zIndex={21}
         fontFamily="cursive"
         ref={textContentWrapper}
