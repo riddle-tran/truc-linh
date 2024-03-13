@@ -1,7 +1,6 @@
 "use client";
 import * as React from "react";
 
-import { AuthContext } from "@/src/context/AuthContext";
 import LoadingPage from "@/src/presentation/templates/LoadingPage";
 import { Box } from "@chakra-ui/react";
 import { ParticleNetwork } from "./ParticleNetwork";

@@ -30,9 +30,7 @@ const images = [
   "/truc-linh/15.JPG",
   "/truc-linh/16.JPG",
   "/truc-linh/17.JPG",
-  "/truc-linh/18.JPG",
-  "/truc-linh/19.JPG",
-  "/truc-linh/20.JPG",
+  "/truc-linh/18.JPG"
 ];
 
 export function useImage(
