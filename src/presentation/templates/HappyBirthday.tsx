@@ -20,6 +20,7 @@ const TEXT_CONTENT = [
 
 const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const canvasParentRef = React.useRef<HTMLDivElement | null>(null);
   const particleNetworkRef = React.useRef<ParticleNetwork>();
   const textContentWrapper = React.useRef<HTMLDivElement>(null);
@@ -49,6 +50,7 @@ const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
         runSnow();
         const ctx = canvas?.getContext("2d") as CanvasRenderingContext2D;
         const video = document.createElement("video");
+        videoRef.current=video
         video.src = "/truc-linh/happy-birthday.mp4"; // Replace with the actual path to your video file
         video.autoplay = true;
         video.preload = "auto";
@@ -71,7 +73,7 @@ const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
         video.addEventListener("play", drawFrame);
       }
     }, 0);
-  }, [active, runSnow]);
+  }, [runSnow]);
 
   React.useEffect(() => {
     if (!isTypewriter) {
@@ -115,6 +117,15 @@ const HappyBirthday: React.FC<{ active: Boolean }> = ({ active }) => {
     };
   }, [isTypewriter]);
 
+
+  React.useEffect(() => {
+    if(active && videoRef.current){
+      videoRef.current.play()
+      return
+    }
+    videoRef.current?.pause()
+  }, [active]);
+  
   return (
     <>
       <Box
